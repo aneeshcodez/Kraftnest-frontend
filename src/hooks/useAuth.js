@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getUserFromToken, subscribeAuth } from '../auth'
+import { isAdmin as checkIsAdmin, getUserFromToken, subscribeAuth } from '../auth'
 
 export default function useAuth() {
     const [user, setUser] = useState(getUserFromToken())
@@ -9,6 +9,10 @@ export default function useAuth() {
         return unsubscribe
     }, [])
 
-    const isAdmin = user && ((user.roles && user.roles.includes('ROLE_ADMIN')) || (user.authorities && user.authorities.includes('ROLE_ADMIN')))
+    // Use the centralized isAdmin() logic from auth.js (reads token)
+    const isAdmin = checkIsAdmin()
+
     return { user, isAdmin }
 }
+
+// auth.js
